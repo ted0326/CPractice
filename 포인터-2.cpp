@@ -173,5 +173,150 @@ for(i=0;i<5;i++)
  printf("%d,%d,%d,%d,%d", a, b, c, d, e);// 앞에서 a b c d e 의 값을 i 입력하였으므로 0 1 2 3 4 가 대입됨
  return 0;
  }
+배열에 대한 포인터
+배열에 대한 포인터는 배열 전체를 가리키는 포인터이다.
+int (*p)[5]=NULL;//int [5]의 주소를 저장하는 포인터
+배열에 대한 포인터는 2차원 배열과 함께 사용된다.
+
+int main()
+{
+int data[3][5]={
+	{1,2,3,4,5},
+	{6,7,8,9,10},
+	{11,12,13,14,15}}
+int(*p)[5]=&data[0];//크가가 5인 배열을 주소로 가짐
+int i,j;
+
+for(i=0;i<3;i++)
+{
+	for(j=0;j<5;j++)
+	{
+	printf("%2d",p[i][j]);
+	printf("\n");
+	}
+}
+return 0;
+}
+
+이중 포인터
+이중 포인터는 포인터의 주소를 저장하는 포인터이다.
+int x=10;
+int *p=&x;
+int **pp=&p;
+이중 포인터가 가리키는 변수에 접근할 때도 역참조 연산자를 사용, 이 경우 역참조연산을 2번해야한다.
+
+함수와 포인터
+ 
+ 함수의 인자 전달 방법
+ 1.값에 의한 전달
+ 함수 호출시 넘겨주는 인자를 매개변수로 복사해서 전달하는 방식
+ 함수의 매개변수는 함수가 호출될 때 생성되는 지역변수로 함수 호풀 시 넘겨주는 인자의 값으로 초기화됨
+ex)
+double get_area(double radius)
+{
+	const double pi=3.14;
+	return pi*radius*radius;
+}
+
+int main()
+{
+double result=get_area(2.5);//여기서 2.5가 매겨변수 radius에 대입된다. 인자를 매개변수로 복사해서 전달, 복사에 의한 전달이라고도 함
+printf("%f",result);
+
+포인터에 의한 전달
+변수의 값을 복사해서 전달하는 대신 변수의 주소를 전달함
+void swap(int*x,int*y)매개변수는 포인터형으로 선언됨
+swap(&a,&b) //포인터에 의한 전달 사용
+즉 int*x=&a,int*y=&b;와 같은의미
+포인터에 의한 전달 방법으로 인자를 전달하면 함수 호출 시 넘겨준 주소가 매개변수인 포인터에 저장된다. 따라서 함수 안에서 매개변수인 포인터를 통해서 함수를 호출한 곳에 있는 변수에 접근 가능
+
+void swap(int*x,int*y);
+
+int main()
+{
+int a=3,b=7;
+printf("a=%d,b=%d",a,b);
+swap(&a,&b);
+printf("a=%d,b=%d",a,b);
+return 0;
+}
+void swap(int*x,int*y)//여기서 *는 포인터의 선언 용도로 사용
+{
+int temp=*x;//x가 가리키는 변수의 값을 temp에 저장
+*x=*y;
+* *y=temp;
+* }
+* 포인터에 의한 전달 방법은 함수의 처리결과를 매개변수로 전달할 때 유용, 함수의 처리결과가 2개 이상인 경우 리턴값을 받을 수 없어 포인터에 의한 전달방법을 이용함
+/
+함수의 처리결과를 매개변수로 전달하는 과정
+void get_sum_product(int x, int y ,int *sum,int *product)
+
+int main()
+{
+int result 1,result 2;
+
+get_sum_product(10,20,&result1,&result 2);
+printf("sum=%d,product=%d\n",result1,result2);
+return 0;
+}
+void get_sum_product(int x, int y ,int *sum,int *product)
+{
+*sum=x+y;
+* *product=x*y;
+}
+
+함수의 매개변수는 역할에 따라 크게 3가지로 분류됨
+
+입력 매개변수:함수를 호출한 곳에서 입력을 받아오기 위한 매개변수, 함수안에서 사용될 뿐 변경되진 않는다. x, get_area 에서 radius등이 예시이다. 입력 매개변수는 값으로 전달한다.
+
+출력 매개변수:함수의 출력을 함수로 호출한 곳으로 전달하기 위한 매개변수, 함수안에서 변경된다. get_sum_product 에서 sum과 product 등이 예시이다. 출력매개변수는 포인터로 전달한다.
+
+입출력 매개변수: 함수의 입력과 출력 모두로 사용되는 매개변수, 함수안에서 그 값이 사용되기도 하고 변경도 된다. swap 내에서 x,y가 그 예시이다.포인터로 전달
+
+배열의 전달
+배열을 함수의 인자로 전달하려면 크기를 생략한 배열형의 매개변수와 배열의 크기를 전달하는 매개변수 필요
+void print_array(int arr[],int size);
+c에서 배열을 함수의 인자로 전달 시 항상 포인터로 전달함
+void print_array(int *arr,int size);
+void print_array(int arr[],int size);//arr[]는 배열의 원소를 가리키는 포인터형이다.arr은 배열처럼 보이나 포인터이므로 sizeof(arr)은 항상 4바이트이다. 따라서 함수안에서 배열의 크기를 구할 수 없어
+배열의 크기도 매개변수로 받아와야 한다.
+위의 두문장은 같은 뜻이며 둘 중 무엇을 사용하든 상관없다
+함수 호출 시 인자로 배열을 전달 하려면 배열의 이름, 즉 시작주소를 전달한다.
+배열을 입력 매개변수로 사용하려면 const포인터형의 매개변수를 선언한다.
+
+#include<stdio.h>
+#define size 10
+void copy_array(const int source[],int target[],int size);
+void print_array(const int arr[],int size);
+
+int main()
+{
+int x[size]={10,20,30,40,50};
+int y[size]={0};
+
+printf("x=");
+print_array(x,size);
+copy_array(x,y,size);
+printf("y=");
+print_array(y,size);
+return 0;
+}
+void copy_array(const int source[],int target[],int size)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+	target[i]=source[i];
+	}
+}
+void print_array(const int arr[],int size)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+	printf("%d",arr[i]);
+	}
+	printf("\n");
+}
 
  */
