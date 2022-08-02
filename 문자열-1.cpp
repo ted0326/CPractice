@@ -256,4 +256,88 @@ int main()
 	const char*형은 일기 전용 문자열 포인터이므로 문자열의 내용을 읽을 수는 있으나 변경할 수 없다.
 	함수의 매개변수를 입력 매개변수로 지정할 때 유용하다.
 	문자열 전달 시 널문자로 문자열의 끝을 알 수 있어서 배열의 크기가 필요 없다.
-	*/
+
+	문자열 사용을 위한 가이드라인
+	문자열을 어떤 형으로 저장할지 선택하는 기준
+	문자열 변수는 문자 배열에 저장한다
+	문자열 상수는 문자열 리터럴로 나타낸다.
+
+	char* 형의 포인터는 문자배열, 즉 변경할 수 있는 문자열을 가리킬 때만 사용한다.
+	const char*형의 포인터는 변경할 수 없는 문자열을 가리킬 때 사용한다.
+	문자열 리터럴을 가리킬 때는 const char*형의 포인터를 사용한다.
+	문자배열을 읽기 전용으로 접ㄱ근할 때는 const char* 포인터를 사용한다
+	
+	문자열을 매개변수로 전달하는 함수를 정의할 때 주의사항
+	문자열이 출력 매개변수 일 때는 char*형의 매개변수를 사용하고 문자배열의 크기도 매개변수로 받아와야함 함수 안에서 문자열을 변경할 때는 문자배열을 넘어서지 않도록 주의
+	문자열이 입력 매개변수 일 때는 const char*형 매개변수 사용, 이 때 문자열 끝을 널 문자로 확인할 수 있으므로 문자배열의 크기를 매개변수로 받을 필요가 없다.
+	문자열 사용시 문자배열처럼 인덱스 사용 가능
+
+	문자열을 매개변수로 전달하는 함수 호출시 주의 사항
+	매개변수의 데이터형이 char*형일 때는 문자 배열과 char*형의 포인터만 인자로 전달 가능, 함수 호출 후 인자로 전달된 문자열의 내용이 변경 될 수 있음
+	매개변수의 데이터형이 const char*형일 때 문자배열,문자열리터럴,char*형의 포인터, const char*형의 포인터를 모두 인자로 전달 할 수 있다. 함수 호출 후에도 인자로 전달된 문자열의 내용은 달라지지 않는다.
+
+	int swap_string(char*lhs.char*rhs,int size);
+
+	int main()
+	{
+		char str1[size]="";
+		char str2[size]="";
+
+		printf("문자열 2개?");
+		scnaf("%s %s",str1,str2);
+
+		prntf("str1=%s,str2=%s\n",str1,str2);
+		swap_string(str1,str2,size);
+		printf("str1=%s,str2=%s\n",str1,str2);
+		return 0;
+	}
+	int swap_string(char*lhs.char*rhs,int size)
+	{
+		int lhs_len=strlen(lhs);
+		int rhs_len=strlen(rhs);
+		char temp[size]="";
+
+		if(lhs_len+1>size || rhs_len+1>size)
+			return 0;
+		strcpy(temp,lhs);
+		strcpy(lhs,rhs);
+		strcpy(rhs,temp);
+		return 1;
+
+문자열의 배열
+문자열을 여러개 저장하려면 2차원 배열이 필요하다.
+2차원 문자 배열
+2차원 문자 배열을 선언할 때는 널 문자를 포함한 문자열의 길이를 열 크기로, 문자열의 개수를 행 크기로 지정한다.
+char books[5][30]//문자열 길이가 30인 문자열 5개 저장
+
+2차원 문자 배열의 각 문자열에 접근하려면 행 인덱스만 사용하면 된다
+i번째 문자열의 j번째 문자에 접근하려면 books[i][j]처럼 행 인덱스와 열 인덱스를 모두 사용한다.
+
+int main()
+{
+	char books[5][30]={
+		"wonder",
+		"me before you",
+		"the hunger games",
+		"twilight",
+		"harry potter"}
+
+	int i=0;
+	for(i=0;i<5;i++)
+		printf("책 제목:%s\n",books[i]);
+	for(i=0;i<5;i++)
+		if(islower(books[i][0])
+			books[i][0]=toupper(books[i][0]);
+	puts("<<변경 후>>");
+	for(i=0;i<5;i++)
+		printf("책 제목:%s\n",books[i]);
+	return 0;
+}
+2차원 문자배열에 저장된 문자열에 대하여 strlen,strcpy,strcmp,strcat 등의 문자열 처리 함수를 사용하려면 행 인덱스만 지정해서 사용하면 된다.
+
+문자열 포인터 배열
+같은 문자열 리터럴을 여려 번 사용할 때는 문자열 포인터에 문자열 리터럴의 주소를 저장해두고 사용 할 수 있다.
+const char*형의 포인터로 문자열 리터럴을 가리키는 경우에는 문자열 리터럴을 수정할 필요가 있을 때, 포인터 선언문만 수정하면 된다
+문자열 리터럴의 주소가 원소인 배열은 const char*형의 포인터 배열로 선언한다.
+
+*/
